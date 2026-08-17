@@ -1,0 +1,34 @@
+{
+  "name": "aestimo-numerics",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Zero-dependency numerical toolkit for finance in JavaScript: BCa bootstrap inference, audited seeded PRNG (xoshiro128**), safeguarded root-finding with YTM/IRR/XIRR, SPD Cholesky/LDLT, market beta with shrinkage, Kelly sizing.",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/JesperNilsen/aestimo-numerics.git"
+  },
+  "scripts": {
+    "test": "node run-all.js"
+  },
+  "keywords": [
+    "bootstrap",
+    "bca",
+    "confidence-interval",
+    "resampling",
+    "prng",
+    "xoshiro128",
+    "seeded-random",
+    "cholesky",
+    "ldlt",
+    "root-finding",
+    "irr",
+    "xirr",
+    "ytm",
+    "kelly-criterion",
+    "beta",
+    "finance",
+    "monte-carlo",
+    "zero-dependency"
+  ]
+}
