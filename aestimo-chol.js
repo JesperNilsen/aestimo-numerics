@@ -154,6 +154,16 @@
     if (!isSquare(A)) {
       return { ok: false, reason: 'not square' };
     }
+    // Non-finite entries first: every comparison below is false for NaN
+    // (|a−b| > tol, pivot <= tol), so a NaN matrix would otherwise sail
+    // through the symmetry and pivot checks and come back ok:true.
+    for (var r = 0; r < A.length; r++) {
+      for (var c = 0; c < A.length; c++) {
+        if (!isFinite(A[r][c])) {
+          return { ok: false, reason: 'non-finite entry' };
+        }
+      }
+    }
     if (!isSymmetric(A, tol)) {
       return { ok: false, reason: 'not symmetric' };
     }
@@ -491,6 +501,16 @@
     ['non-symmetric flagged, not factored', function () {
       var r = cholesky([[1, 2], [3, 4]]);
       return r.ok === false && r.reason === 'not symmetric';
+    }],
+    // Regression lock: NaN used to pass the symmetry/pivot comparisons (all
+    // false for NaN) and return ok:true with a NaN-contaminated factor.
+    ['non-finite entry (NaN upper, NaN diagonal, Infinity) → ok:false, no L', function () {
+      var bad = [[[1, NaN], [0, 1]], [[NaN, 0], [0, 1]], [[1, 0], [Infinity, 1]]];
+      for (var i = 0; i < bad.length; i++) {
+        var r = cholesky(bad[i]);
+        if (r.ok !== false || r.reason !== 'non-finite entry' || r.hasOwnProperty('L')) return false;
+      }
+      return true;
     }],
     ['PSD-singular [[1,1],[1,1]] → rank-deficient', function () {
       return cholesky([[1, 1], [1, 1]]).ok === false;
