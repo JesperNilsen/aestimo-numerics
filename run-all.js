@@ -10,10 +10,17 @@
  * Adapted from Aestimo's engine/run-all.js: trimmed to the six modules shipped
  * in this repository (the dcf/portfolio/console sections live with the Aestimo
  * product).
+ *
+ * The aestimo-*.js files are generated from Aestimo's engine/ by its
+ * scripts/sync-numerics.mjs, which also writes SYNC.json. The sync check below
+ * fails if any of them differs from SYNC.json: a fix belongs upstream, then a
+ * re-sync. This file, README, LICENSE and package.json are this repo's own.
  */
 'use strict';
 
 var cp = require('child_process');
+var crypto = require('crypto');
+var fs = require('fs');
 var path = require('path');
 var ENGINE = __dirname;
 
@@ -103,6 +110,31 @@ cross.forEach(function (x) {
   if (!x.pass) anyFail = true;
 });
 summary.push('cross-module: ' + cross.filter(function (x) { return x.pass; }).length + '/' + cross.length);
+console.log('');
+
+// ---- sync: the generated files are byte-identical to what Aestimo wrote ----
+console.log('=== sync ===');
+try {
+  var lock = JSON.parse(fs.readFileSync(path.join(ENGINE, 'SYNC.json'), 'utf8')).files;
+  var names = Object.keys(lock);
+  var drifted = names.filter(function (f) {
+    var src = fs.readFileSync(path.join(ENGINE, f), 'utf8');
+    return crypto.createHash('sha256').update(src).digest('hex') !== lock[f];
+  });
+  var unlisted = fs.readdirSync(ENGINE).filter(function (f) {
+    return /^aestimo-.*\.js$/.test(f) && names.indexOf(f) === -1;
+  });
+  drifted.forEach(function (f) { console.log('FAIL  ' + f + ' differs from SYNC.json (edit Aestimo engine/' + f + ' and re-sync)'); });
+  unlisted.forEach(function (f) { console.log('FAIL  ' + f + ' is not in SYNC.json'); });
+  var syncOk = names.length > 0 && !drifted.length && !unlisted.length;
+  if (syncOk) console.log('PASS  ' + names.length + ' generated files match SYNC.json');
+  if (!syncOk) anyFail = true;
+  summary.push('sync: ' + (names.length - drifted.length) + '/' + names.length + (unlisted.length ? ', ' + unlisted.length + ' unlisted' : ''));
+} catch (e) {
+  anyFail = true;
+  console.log('sync FAIL: ' + (e && e.message));
+  summary.push('sync: FAIL');
+}
 console.log('');
 
 console.log('=== battery summary ===');

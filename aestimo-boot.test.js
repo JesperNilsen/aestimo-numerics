@@ -1,3 +1,5 @@
+// Generated from Aestimo engine/aestimo-boot.test.js by scripts/sync-numerics.mjs. Do not edit here:
+// fix it upstream and re-sync, or this repo's npm test fails against SYNC.json.
 /* ===========================================================================
  * aestimo-boot.test.js  —  Invariant battery for the bootstrap engine
  * ===========================================================================
@@ -218,6 +220,20 @@ section('Block bootstrap');
   const q1 = blockBootstrap(data, mean, { B: 4000, blockLength: 10, seed: 8 }).replicates;
   const q2 = blockBootstrap(data, mean, { B: 4000, blockLength: 10, seed: 8 }).replicates;
   ok('block: fixed seed → identical replicates', q1.every((v, i) => v === q2[i]));
+
+  // Guard: ℓ > n (nStarts ≤ 0) or non-integer / ℓ < 1 is refused by name —
+  // ok:false + reason from blockBootstrap, RangeError from the primitive —
+  // never NaN replicates. ℓ = n (single admissible start) stays valid.
+  const small = data.slice(0, 8);
+  const over = blockBootstrap(small, mean, { B: 50, blockLength: 9, seed: 1 });
+  const frac = blockBootstrap(small, mean, { B: 50, blockLength: 2.5, seed: 1 });
+  const full = blockBootstrap(small, mean, { B: 50, blockLength: 8, seed: 1 });
+  let threw = false;
+  try { movingBlockResample(small, makeRNG(1), 9); } catch (e) { threw = e instanceof RangeError; }
+  ok('block: ℓ > n ⇒ ok:false + reason (no NaN stats); primitive throws RangeError',
+    over.ok === false && /exceeds/.test(over.reason) && over.replicates === undefined &&
+    frac.ok === false && /integer/.test(frac.reason) && threw &&
+    full.ok === undefined && Number.isFinite(full.se));
 }
 
 /* =====================================================================

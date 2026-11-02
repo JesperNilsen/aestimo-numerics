@@ -1,3 +1,5 @@
+// Generated from Aestimo engine/aestimo-boot.js by scripts/sync-numerics.mjs. Do not edit here:
+// fix it upstream and re-sync, or this repo's npm test fails against SYNC.json.
 /* ===========================================================================
  * aestimo-boot.js  —  Bootstrap resampling inference for return statistics
  * ===========================================================================
@@ -422,8 +424,19 @@
   // truncate to n. At ℓ=1 the start map `floor(rng()*(n-ℓ+1))` becomes
   // `floor(rng()*n)` — identical rng consumption and identical index map as the
   // iid `resample`, so the ℓ=1 reduction is BIT-EXACT, not merely distributional.
+  // Admissible block length: an integer 1 ≤ ℓ ≤ n. ℓ > n leaves nStarts ≤ 0
+  // (every start reads data[≤0 + j] → undefined → NaN statistics); ℓ < 1 never
+  // fills the output (infinite loop). Returns a reason string, or null if valid.
+  function blockLengthError(n, ell) {
+    if (!Number.isInteger(ell) || ell < 1) return 'blockLength must be an integer >= 1, got ' + ell;
+    if (ell > n) return 'blockLength ' + ell + ' exceeds series length ' + n + ' (no admissible block start)';
+    return null;
+  }
+
   function movingBlockResample(data, rng, ell) {
     const n = data.length;
+    const bad = blockLengthError(n, ell);
+    if (bad) throw new RangeError('movingBlockResample: ' + bad);
     const nStarts = n - ell + 1;
     const out = new Array(n);
     let filled = 0;
@@ -438,6 +451,10 @@
     opts = opts || {};
     const B = opts.B || 10000;
     const ell = opts.blockLength || 1;
+    // Structured refusal (discard, not clamp): an inadmissible ℓ is reported
+    // by name before any rng is consumed, never turned into NaN replicates.
+    const bad = blockLengthError(data.length, ell);
+    if (bad) return { ok: false, reason: bad, B, blockLength: ell };
     const rng = makeRNG(opts.seed);
     const estimate = stat(data);
     const replicates = new Array(B);

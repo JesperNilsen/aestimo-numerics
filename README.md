@@ -14,7 +14,9 @@ applications (YTM, IRR/XIRR, market beta, Kelly sizing).
 
 Extracted from [Aestimo](https://github.com/JesperNilsen/Aestimo), a suite of
 offline investment-research instruments, where these files are the
-computational layer.
+computational layer. The `aestimo-*.js` files are generated from Aestimo's
+engines, and `SYNC.json` lists their hashes: fixes are made there and synced
+here, so an edit made directly in this repo fails `npm test`.
 
 ## Modules
 

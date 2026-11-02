@@ -1,3 +1,5 @@
+// Generated from Aestimo engine/aestimo-random.js by scripts/sync-numerics.mjs. Do not edit here:
+// fix it upstream and re-sync, or this repo's npm test fails against SYNC.json.
 /*
  * Aestimo N — Seeded PRNG & Gaussian sampling engine.
  *
@@ -150,6 +152,24 @@
     return Math.sqrt(sampleVariance(xs));
   }
 
+  // Standardized moments divide by a power of m2, so zero spread leaves them
+  // undefined (0/0). Two ways to get there: m2 = 0 exactly, or — the common
+  // one — CONSTANT data whose mean rounds off c, leaving every deviation the
+  // same ~1-ulp residue δ: m2 ≈ δ² > 0 and the ratio collapses to a confident
+  // ±1 (skew) or −2 (excess kurtosis), a plausible wrong number. Constancy is
+  // tested exactly (max === min, scale-free) alongside !(m2 > 0), which also
+  // catches empty input and NaN. Refused by throwing, as sampleVariance does.
+  function requireSpread(xs, m2, who) {
+    let lo = Infinity, hi = -Infinity;
+    for (let i = 0; i < xs.length; i++) {
+      if (xs[i] < lo) lo = xs[i];
+      if (xs[i] > hi) hi = xs[i];
+    }
+    if (!(m2 > 0) || !(hi > lo)) {
+      throw new Error(who + ' is undefined for zero-variance data (m2 = ' + m2 + ', n = ' + xs.length + ')');
+    }
+  }
+
   function sampleSkewness(xs) {
     // Population-moment skewness g1 = m3 / m2^1.5 — the biased estimator,
     // NOT the small-sample-corrected Fisher-Pearson G1. Deliberate: this
@@ -159,6 +179,7 @@
     // estimator upstream — at n=20 the correction is material.
     const mean = sampleMean(xs);
     const m2 = centralMoment(xs, mean, 2);
+    requireSpread(xs, m2, 'sampleSkewness');
     const m3 = centralMoment(xs, mean, 3);
     return m3 / Math.pow(m2, 1.5);
   }
@@ -169,6 +190,7 @@
     // sampleSkewness above.
     const mean = sampleMean(xs);
     const m2 = centralMoment(xs, mean, 2);
+    requireSpread(xs, m2, 'sampleKurtosis');
     const m4 = centralMoment(xs, mean, 4);
     return m4 / (m2 * m2) - 3;
   }
@@ -632,6 +654,13 @@
       let s01 = 0, s00 = 0, s11 = 0;
       cd.forEach((p) => { s01 += (p[0] - m0) * (p[1] - m1); s00 += (p[0] - m0) * (p[0] - m0); s11 += (p[1] - m1) * (p[1] - m1); });
       return approx(s01 / Math.sqrt(s00 * s11), 0.6 / Math.sqrt(2), 0.015);
+    });
+    add("skewness/kurtosis refuse zero-variance data (throw, never NaN or ±1/−2)", () => {
+      const throws = (fn, xs) => { try { fn(xs); } catch (er) { return /zero-variance/.test(er.message); } return false; };
+      const flat = [[5, 5, 5, 5], [0.1, 0.1, 0.1], [0.7, 0.7, 0.7, 0.7, 0.7, 0.7, 0.7], []];
+      const refused = flat.every((xs) => throws(sampleSkewness, xs) && throws(sampleKurtosis, xs));
+      const live = [1, 2, 3, 10];   // m3 > 0: finite, positive skew; excess kurtosis finite
+      return refused && sampleSkewness(live) > 0 && Number.isFinite(sampleKurtosis(live));
     });
     add("selfTest() returns true", () => selfTest() === true);
 

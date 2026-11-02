@@ -1,3 +1,5 @@
+// Generated from Aestimo engine/aestimo-solve.test.js by scripts/sync-numerics.mjs. Do not edit here:
+// fix it upstream and re-sync, or this repo's npm test fails against SYNC.json.
 'use strict';
 
 /*
@@ -189,6 +191,19 @@ console.log('=== YTM ===');
   const okBey = near(bey.annualYield, bey.periodicYield * 2) && bey.annualization === 'bey';
   const okEff = near(eff.annualYield, Math.pow(1 + eff.periodicYield, 2) - 1) && eff.annualization === 'effective';
   check('ytm  bey = periodic×freq; effective = (1+periodic)^freq−1; both labelled', okBey && okEff);
+})();
+
+(() => {
+  // frequency guard: 0 / negative / non-finite payments-per-year is refused by
+  // name (converged:false + reason), never annualized to a plausible 0.
+  const bond = { price: 950, face: 1000, coupon: 25, periods: 20 };
+  const bad = [0, -2, NaN, Infinity].map((fq) => E.ytm(bond, { frequency: fq, annualize: 'bey' }));
+  const badEff = E.ytm(bond, { frequency: 0, annualize: 'effective' });
+  const refused = (r) => r.converged === false && /frequency/.test(r.reason || '') &&
+    Number.isNaN(r.annualYield);
+  const ok = E.ytm(bond, { frequency: 2 });
+  check('ytm  frequency ≤ 0 / non-finite ⇒ converged:false + reason (no silent 0 yield)',
+    bad.every(refused) && refused(badEff) && ok.converged === true && ok.reason === undefined);
 })();
 
 console.log('=== IRR ===');

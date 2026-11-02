@@ -1,3 +1,5 @@
+// Generated from Aestimo engine/aestimo-kelly.test.js by scripts/sync-numerics.mjs. Do not edit here:
+// fix it upstream and re-sync, or this repo's npm test fails against SYNC.json.
 /*
  * aestimo-kelly.test.js — headless runner for aestimo-kelly.js.
  *

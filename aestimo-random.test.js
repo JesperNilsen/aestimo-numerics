@@ -1,3 +1,5 @@
+// Generated from Aestimo engine/aestimo-random.test.js by scripts/sync-numerics.mjs. Do not edit here:
+// fix it upstream and re-sync, or this repo's npm test fails against SYNC.json.
 /*
  * aestimo-random.test.js — thin PASS/FAIL printer over the engine's canonical
  * battery(). No checks are defined here; the invariant list, golden-stream

@@ -1,3 +1,5 @@
+// Generated from Aestimo engine/aestimo-chol.test.js by scripts/sync-numerics.mjs. Do not edit here:
+// fix it upstream and re-sync, or this repo's npm test fails against SYNC.json.
 /*
  * aestimo-chol.test.js — thin node runner over the engine's canonical
  * battery. The invariant checks and golden locks live in aestimo-chol.js

@@ -1,3 +1,5 @@
+// Generated from Aestimo engine/aestimo-solve.js by scripts/sync-numerics.mjs. Do not edit here:
+// fix it upstream and re-sync, or this repo's npm test fails against SYNC.json.
 'use strict';
 
 /*
@@ -307,6 +309,17 @@ function bondPriceDeriv(y, { face, coupon, periods }) {
 function ytm({ price, face, coupon, periods }, opts = {}) {
   const { frequency = 1, annualize = 'bey', tol, maxIter } =
     { ...DEFAULTS, ...opts };
+
+  // Payments per year must be a positive finite count: frequency = 0 would
+  // silently annualize any yield to 0 (bey) or 0 (effective, (1+y)^0 − 1) — a
+  // plausible wrong number. Refuse by name, in the module's no-root shape.
+  if (!(Number.isFinite(frequency) && frequency > 0)) {
+    return {
+      periodicYield: NaN, annualYield: NaN, annualization: annualize,
+      converged: false, residual: NaN,
+      reason: 'frequency must be a positive finite number of payments per year, got ' + frequency,
+    };
+  }
 
   const f = (y) => bondPrice(y, { face, coupon, periods }) - price;
   const fp = (y) => bondPriceDeriv(y, { face, coupon, periods });

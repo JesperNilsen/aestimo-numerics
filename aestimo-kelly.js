@@ -1,3 +1,5 @@
+// Generated from Aestimo engine/aestimo-kelly.js by scripts/sync-numerics.mjs. Do not edit here:
+// fix it upstream and re-sync, or this repo's npm test fails against SYNC.json.
 /*
  * aestimo-kelly.js — log-optimal position sizing.
  * ===========================================================================
