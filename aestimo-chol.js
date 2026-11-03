@@ -1,5 +1,7 @@
 // Generated from Aestimo engine/aestimo-chol.js by scripts/sync-numerics.mjs. Do not edit here:
 // fix it upstream and re-sync, or this repo's npm test fails against SYNC.json.
+// Generated from aestimo-chol.mjs by scripts/build-umd.mjs (the UMD build). Do not edit
+// here: edit the .mjs and run `npm run build-umd`.
 /*
  * aestimo-chol.js — SPD covariance-factorization primitive.
  *
@@ -17,8 +19,9 @@
  * Gaussian copula, and the forthcoming Markowitz optimizer's SPD solve
  * (which replaces any explicit Σ⁻¹ with a solve against Σ).
  *
- * UMD wrapper — runs under Node (module.exports) and in the browser
- * (globalThis.AestimoChol), same pattern as aestimo-solve.js.
+ * An ES module. scripts/build-umd.mjs generates the UMD build aestimo-chol.js,
+ * which runs under Node (module.exports) and in the browser
+ * (globalThis.AestimoChol), the same way as every other engine.
  */
 (function (root, factory) {
   if (typeof module === 'object' && module.exports) {
@@ -26,7 +29,7 @@
   } else {
     root.AestimoChol = factory();
   }
-})(typeof self !== 'undefined' ? self : this, function () {
+})(typeof globalThis !== 'undefined' ? globalThis : this, function () {
   'use strict';
 
   // ============================================================
@@ -662,27 +665,27 @@
 
   return {
     // Layer 0
-    isSquare: isSquare,
-    isSymmetric: isSymmetric,
-    transpose: transpose,
-    matVec: matVec,
-    matMul: matMul,
+    isSquare,
+    isSymmetric,
+    transpose,
+    matVec,
+    matMul,
     // Layer 1
-    cholesky: cholesky,
+    cholesky,
     // Layer 2
-    forwardSub: forwardSub,
-    backSub: backSub,
+    forwardSub,
+    backSub,
     // Layer 3
-    solveSPD: solveSPD,
-    invSPD: invSPD,
+    solveSPD,
+    invSPD,
     // Layer 4
-    correlate: correlate,
-    covToCorr: covToCorr,
-    corrToCov: corrToCov,
+    correlate,
+    covToCorr,
+    corrToCov,
     // Layer 5
-    ldlt: ldlt,
+    ldlt,
     // Layer 6
-    battery: battery,
-    selfTest: selfTest
+    battery,
+    selfTest
   };
 });

@@ -1,5 +1,7 @@
 // Generated from Aestimo engine/aestimo-boot.js by scripts/sync-numerics.mjs. Do not edit here:
 // fix it upstream and re-sync, or this repo's npm test fails against SYNC.json.
+// Generated from aestimo-boot.mjs by scripts/build-umd.mjs (the UMD build). Do not edit
+// here: edit the .mjs and run `npm run build-umd`.
 /* ===========================================================================
  * aestimo-boot.js  —  Bootstrap resampling inference for return statistics
  * ===========================================================================
@@ -31,11 +33,9 @@
  * ------------------------------------------------------------------------- */
 (function (root, factory) {
   if (typeof module === 'object' && module.exports) {
-    // Node: pull the seeded generator from the sibling module.
     module.exports = factory(require('./aestimo-random.js'));
   } else {
-    // Browser: the random module must have assigned globalThis.AestimoRandom
-    // *before* this script runs (splice order guarantees it).
+    if (!root.AestimoRandom) throw new Error('aestimo-boot.js: load aestimo-random.js first');
     root.AestimoBoot = factory(root.AestimoRandom);
   }
 })(typeof globalThis !== 'undefined' ? globalThis : this, function (AestimoRandom) {
@@ -518,6 +518,8 @@
     } catch (_) { return false; }
   }
 
+  const VERSION = '1.0.0';
+
   return {
     // primitives
     resample, quantile, ecdf, sortedCopy,
@@ -533,6 +535,6 @@
     blockBootstrap, stationaryBootstrap, movingBlockResample, stationaryBlockResample,
     // self-test
     selfTest,
-    VERSION: '1.0.0'
+    VERSION
   };
 });

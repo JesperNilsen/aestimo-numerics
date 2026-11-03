@@ -1,5 +1,7 @@
 // Generated from Aestimo engine/aestimo-random.js by scripts/sync-numerics.mjs. Do not edit here:
 // fix it upstream and re-sync, or this repo's npm test fails against SYNC.json.
+// Generated from aestimo-random.mjs by scripts/build-umd.mjs (the UMD build). Do not edit
+// here: edit the .mjs and run `npm run build-umd`.
 /*
  * Aestimo N — Seeded PRNG & Gaussian sampling engine.
  *
@@ -17,7 +19,7 @@
   } else {
     root.AestimoRandom = factory();
   }
-}(typeof self !== 'undefined' ? self : this, function () {
+})(typeof globalThis !== 'undefined' ? globalThis : this, function () {
   'use strict';
 
   // ---------------------------------------------------------------------
@@ -692,5 +694,4 @@
     selfTest,
     battery
   };
-}));
-
+});

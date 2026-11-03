@@ -1,17 +1,17 @@
 {
   "note": "sha256 of each file aestimo-numerics receives from engine/. Written by scripts/sync-numerics.mjs --write; checked by --check (npm test).",
   "files": {
-    "aestimo-random.js": "2ffffc4ac8108b81e71249491bc4732552a14c57ab8c5a69ee0fd4af93377a2d",
+    "aestimo-random.js": "0053a6d945740e14eadc30b69213f9a7e8ada2ed030935210aa281bd9498857e",
     "aestimo-random.test.js": "e4c059715afd3c465013ca31fd593dde28366439432c9d21d8dd03c99e683a0e",
-    "aestimo-boot.js": "42feaed6fbdfcfd8dfbbad963d4cec061dc80053c7e2dbf571fe953c5f5b9182",
+    "aestimo-boot.js": "d6cced5c60d425ad02fc49ad644c909629d5682ee5f4c077bc1de3181c268555",
     "aestimo-boot.test.js": "0d80714728f381a38f8710b1b1e63a4702cd7cf771ae3e0ee592a23d05a0f2c1",
-    "aestimo-solve.js": "c262d567a5c04e413a83f854f890225a479453217817063b95101f9bc7883942",
+    "aestimo-solve.js": "54a7fd8e9c8b1bcf42ebcf223e2d489d745d374e83bf9871c04001d82e9a4f2b",
     "aestimo-solve.test.js": "aa27b731a7d97cda52608e13420effd8ced26ef9e665a2d6cf0ab5ad8901e883",
-    "aestimo-chol.js": "c48e81ffce8628afff77ecd66b6875091eb434b4ca555eeda8e6ee785327a860",
+    "aestimo-chol.js": "7ee3269ba25cb67ea737dd906c9991d39f78d4a4583f15cc94d69ed0e03970a1",
     "aestimo-chol.test.js": "00c746804919f8861cada947fe9201ecd26c03d40d95af14c1845130f3cac96a",
-    "aestimo-beta.js": "caeabac60daad6772b1e70011a0d4912eb620afc7b0be385bfd5900e0ca16f1e",
+    "aestimo-beta.js": "81fbf58fe15ad9b25b6b446bc1144c942f67afb31a5cf71f4abcced3b0071de6",
     "aestimo-beta.test.js": "91f065b84bab0d5b54cf19b87b12cd191e3064126a85bfaf70856802c7fc01a0",
-    "aestimo-kelly.js": "dc4950d2d653447d823b49ade8ba667752ef826f7d90acdbdd7fa4941f6a538b",
+    "aestimo-kelly.js": "e3d33c4c0e6e005155ca745a7267d9c4622d6bec1b2f4c534e5debff5d881541",
     "aestimo-kelly.test.js": "590b4adca2e4e48312a2511baa2bb574668dbae89564cbafcfb34df9ff0cbecf"
   }
 }

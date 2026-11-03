@@ -93,11 +93,13 @@ exact binary64 representability justifies exact equality.
 
 ## Provenance and status
 
-The six modules and their test batteries are extracted **byte-identical**
-from [Aestimo](https://github.com/JesperNilsen/Aestimo)'s `engine/` layer;
-the only adapted file is `run-all.js`, trimmed to the modules shipped here.
-For the time being Aestimo remains upstream — changes land there first and
-are mirrored here. The engine modules kept behind (`aestimo-dcf.js`,
+The six modules are the UMD builds of
+[Aestimo](https://github.com/JesperNilsen/Aestimo)'s `engine/` layer, where
+each engine is written as an ES module and its UMD build is generated. They
+and their test batteries are copied here byte-identical behind a two-line
+header, and `SYNC.json` holds their hashes. The only adapted file is
+`run-all.js`, trimmed to the modules shipped here. Aestimo is upstream:
+changes land there first and are synced here. The engine modules kept behind (`aestimo-dcf.js`,
 `aestimo-portfolio.js`) belong to the Aestimo product rather than to the
 toolkit.
 

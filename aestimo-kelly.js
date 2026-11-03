@@ -1,5 +1,7 @@
 // Generated from Aestimo engine/aestimo-kelly.js by scripts/sync-numerics.mjs. Do not edit here:
 // fix it upstream and re-sync, or this repo's npm test fails against SYNC.json.
+// Generated from aestimo-kelly.mjs by scripts/build-umd.mjs (the UMD build). Do not edit
+// here: edit the .mjs and run `npm run build-umd`.
 /*
  * aestimo-kelly.js — log-optimal position sizing.
  * ===========================================================================
@@ -41,6 +43,8 @@
   if (typeof module === 'object' && module.exports) {
     module.exports = factory(require('./aestimo-solve.js'), require('./aestimo-chol.js'));
   } else {
+    if (!root.AestimoSolve) throw new Error('aestimo-kelly.js: load aestimo-solve.js first');
+    if (!root.AestimoChol) throw new Error('aestimo-kelly.js: load aestimo-chol.js first');
     root.AestimoKelly = factory(root.AestimoSolve, root.AestimoChol);
   }
 })(typeof globalThis !== 'undefined' ? globalThis : this, function (Solve, Chol) {
@@ -520,18 +524,18 @@
 
   return {
     // Layer 0
-    logGrowth: logGrowth, logGrowthSample: logGrowthSample,
-    logGrowthDeriv: logGrowthDeriv, logGrowthSampleDeriv: logGrowthSampleDeriv,
-    geomGrowthRate: geomGrowthRate, noBankruptcyBound: noBankruptcyBound,
+    logGrowth, logGrowthSample,
+    logGrowthDeriv, logGrowthSampleDeriv,
+    geomGrowthRate, noBankruptcyBound,
     // Layer 1
-    kellyBinary: kellyBinary, kellyDiscrete: kellyDiscrete,
+    kellyBinary, kellyDiscrete,
     // Layer 2
-    kellySample: kellySample, kellyGaussian: kellyGaussian,
+    kellySample, kellyGaussian,
     // Layer 3
-    growthRatio: growthRatio, drawdownProb: drawdownProb, fractionalKelly: fractionalKelly,
+    growthRatio, drawdownProb, fractionalKelly,
     // Layer 4
-    kellyVector: kellyVector,
+    kellyVector,
     // Layer 5
-    battery: battery, selfTest: selfTest
+    battery, selfTest
   };
 });
